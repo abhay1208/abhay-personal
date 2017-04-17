@@ -1,3 +1,8 @@
+/*
+ * Template class for min heap implementation
+ * Author - Abhay Gupta
+ */
+
 #include <iostream>
 #include <vector>
 using namespace std;

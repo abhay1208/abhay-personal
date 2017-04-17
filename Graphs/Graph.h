@@ -10,7 +10,7 @@
 #endif
 
 /*
- Assignment 1 - Convert a C program to C++
+ Assignment 1 - Graph implemetaion
  Author - Abhay Gupta
  Date - 04/07/2017
  */
