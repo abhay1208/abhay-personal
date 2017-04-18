@@ -26,9 +26,10 @@ class Graph {
 public:
 
 	Graph(double density, int maxDistance, int Nodes = 5);
+	Graph(vector<vector<int> > g);
 	void printGraph();
 	vector<int> getNeighbours(int v);
-	int getNumVertices();
+	int getNumNodes();
 	int getNumEdges();
 	bool isAdjacent(int node1, int node2);
 	void addEdge(int node1, int node2);

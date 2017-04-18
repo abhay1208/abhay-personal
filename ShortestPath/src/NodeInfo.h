@@ -5,16 +5,17 @@
  *      Author: Abhay
  */
 #include <iostream>
-#ifndef SRC_VERTEXINFO_H_
-#define SRC_VERTEXINFO_H_
+#ifndef SRC_NodeINFO_H_
+#define SRC_NodeINFO_H_
 using namespace std;
-class VertexInfo {
+class NodeInfo {
 public:
-	VertexInfo() {
+	NodeInfo() {
 	}
 	;
 
-	VertexInfo(int node);
+	NodeInfo(int node);
+	NodeInfo(int node, int prevNode);
 
 	// Getters
 
@@ -37,16 +38,16 @@ public:
 	}
 
 	// Operator Overloading
-	bool operator>(const VertexInfo& other);
-	bool operator<(const VertexInfo& other);
-	bool operator ==(const VertexInfo& other);
+	bool operator>(const NodeInfo& other);
+	bool operator<(const NodeInfo& other);
+	bool operator ==(const NodeInfo& other);
 
-	friend std::ostream& operator <<(std::ostream& out, const VertexInfo& v) {
+	friend std::ostream& operator <<(std::ostream& out, const NodeInfo& v) {
 		out << v.getNode();
 		return out;
 	}
 
-	virtual ~VertexInfo();
+	virtual ~NodeInfo();
 private:
 	int m_node;
 	int m_prevNode;
@@ -54,4 +55,4 @@ private:
 }
 ;
 
-#endif /* SRC_VERTEXINFO_H_ */
+#endif /* SRC_NodeINFO_H_ */

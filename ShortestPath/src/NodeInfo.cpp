@@ -1,21 +1,26 @@
 /*
- * VertexInfo.cpp
+ * NodeInfo.cpp
  *
  *  Created on: Apr 17, 2017
  *      Author: Abhay
  */
 
-#include "VertexInfo.h"
+#include "NodeInfo.h"
 #include <limits.h>
 #include <iostream>
 using namespace std;
 
-VertexInfo::VertexInfo(int node) :
+NodeInfo::NodeInfo(int node) :
 		m_node(node), m_prevNode(node) {
 	m_cost = INT_MAX;
 }
 
-bool VertexInfo::operator>(const VertexInfo& other) {
+NodeInfo::NodeInfo(int node, int prevNode) :
+		m_node(node), m_prevNode(prevNode) {
+	m_cost = INT_MAX;
+}
+
+bool NodeInfo::operator>(const NodeInfo& other) {
 	if (m_cost > other.m_cost) {
 		return true;
 	}
@@ -23,7 +28,7 @@ bool VertexInfo::operator>(const VertexInfo& other) {
 	return false;
 }
 
-bool VertexInfo::operator<(const VertexInfo& other) {
+bool NodeInfo::operator<(const NodeInfo& other) {
 	if (m_cost < other.m_cost) {
 		return true;
 	}
@@ -31,15 +36,15 @@ bool VertexInfo::operator<(const VertexInfo& other) {
 	return false;
 }
 
-bool VertexInfo::operator ==(const VertexInfo& other) {
-	if (m_cost == other.m_cost) {
+bool NodeInfo::operator ==(const NodeInfo& other) {
+	if (m_node == other.m_node) {
 		return true;
 	}
 	// else
 	return false;
 }
 
-VertexInfo::~VertexInfo() {
+NodeInfo::~NodeInfo() {
 	// TODO Auto-generated destructor stub
 }
 

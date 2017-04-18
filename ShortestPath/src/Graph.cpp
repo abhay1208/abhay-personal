@@ -13,6 +13,12 @@ Graph::Graph(double density, int maxDistance, int Nodes) :
 	createGraph();
 }
 
+Graph::Graph(vector<vector<int> > g) {
+	m_data = g;
+	vector<int> column = g[0];
+	m_Nodes = column.size();
+}
+
 void Graph::createGraph() {
 
 	/*
@@ -45,7 +51,7 @@ void Graph::createGraph() {
 }
 
 vector<int> Graph::getNeighbours(int vertex) {
-	// Make sure the given vertex doesn't exceed maximum nodes
+// Make sure the given vertex doesn't exceed maximum nodes
 	vector<int> neighbours;
 	if (vertex >= m_Nodes) {
 		cout << "The input argument vertex exceeds max number of nodes" << endl;
@@ -62,7 +68,7 @@ vector<int> Graph::getNeighbours(int vertex) {
 
 }
 
-int Graph::getNumVertices() {
+int Graph::getNumNodes() {
 	return m_Nodes;
 }
 
@@ -88,7 +94,7 @@ bool Graph::isAdjacent(int node1, int node2) {
 	if (m_data[node1][node2] != 0) {
 		return true;
 	}
-	// else
+// else
 	return false;
 }
 

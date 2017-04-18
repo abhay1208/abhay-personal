@@ -12,27 +12,31 @@ public:
 	PriorityQueue(const T data[], int length);
 
 	T pop();
-	void push(T vertex);
-	void changePriority(T vertex);
-	void deleteVertex(T vertex);
-	int getTotalNodes();
-	vector<int> getVertexIndex(T vertex);
+	void push(T element);
+	void changePriority(T element);
+	void deleteElement(T element);
+	int getTotalElements();
+	int getElementIndex(T element);
+	T getElement(int index);
 	void printQueue();
+	void printQueueCost();
 
 private:
 	vector<T> m_queue;
-	vector<int> getChildren(int node);
-	vector<int> getParent(int node);
+	vector<unsigned int> getChildrenIndex(int index);
+	int getParentIndex(int index);
+	bool isRoot(int index);
 	void heapify();
-	void bubbleup(int node);
-	void sinkDown(int node = 0);
-	void swapNodes(int node1, int node2);
+	void bubbleup(int index);
+	void sinkDown(int index = 0);
+	void swapElements(int index1, int index2);
 
-};
+}
+;
 
 template<typename T>
 PriorityQueue<T>::PriorityQueue(const vector<T>& data) {
-	for (int i = 0; i < data.size(); i++) {
+	for (unsigned int i = 0; i < data.size(); i++) {
 		m_queue.push_back(data[i]);
 	}
 
@@ -42,7 +46,7 @@ PriorityQueue<T>::PriorityQueue(const vector<T>& data) {
 
 template<typename T>
 PriorityQueue<T>::PriorityQueue(const T data[], int length) {
-	for (int i = 0; i < length; i++) {
+	for (unsigned int i = 0; i < length; i++) {
 		m_queue.push_back(data[i]);
 	}
 
@@ -58,20 +62,25 @@ void PriorityQueue<T>::heapify() {
 }
 
 template<typename T>
-void PriorityQueue<T>::push(T vertex) {
-	m_queue.push_back(vertex);
+void PriorityQueue<T>::push(T element) {
+	m_queue.push_back(element);
 
 	if (m_queue.empty()) {
 		return; //only node
 	}
 	//else bubble up the last node
-	bubbleup(getTotalNodes() - 1);
+	bubbleup(getTotalElements() - 1);
 }
 
 template<typename T>
 T PriorityQueue<T>::pop() {
+	T element;
+	if (m_queue.empty()) {
+		cout << "Nothing to pop. Queue is empty" << endl;
+		element = 0;
+	}
 	// Get the root element
-	T vertex = m_queue[0];
+	element = m_queue[0];
 
 	// Add the last element to the root and resize
 	m_queue[0] = m_queue[m_queue.size() - 1];
@@ -81,122 +90,137 @@ T PriorityQueue<T>::pop() {
 	sinkDown();
 
 	// return the root element
-	return vertex;
+	return element;
 
 }
 template<typename T>
-void PriorityQueue<T>::changePriority(T vertex) {
+void PriorityQueue<T>::changePriority(T element) {
 
-	vector<int> node = getVertexIndex(vertex);
+	int index = getElementIndex(element);
 
-	if (node.empty()) {
+	if (index == -1) {
 		return; // This vertex is not there in the priority queue.
 	}
-	// else update the cost of this vertex and either bubbleup or sinkDown.
-	int currentNode = node[0];
-	vector<int> parent = getParent(currentNode);
 
-	if (parent.empty()) {
-		sinkDown(currentNode);
+	m_queue[index].setCost(element.getCost());
+	m_queue[index].setPrevNode(element.getPrevNode());
+
+	// else update the cost of this vertex and either bubbleup or sinkDown.
+	int parentIndex = getParentIndex(index);
+
+	if (isRoot(index)) {
+		sinkDown(index);
 		return;
 	}
 
-	if (parent[0] > currentNode) {
-		bubbleup(currentNode);
+	if (m_queue[parentIndex] > m_queue[index]) {
+		bubbleup(index);
 	} else {
-		sinkDown(currentNode);
+		sinkDown(index);
 	}
 
 }
 
 template<typename T>
-void PriorityQueue<T>::deleteVertex(T vertex) {
-	vector<int> node = getVertexIndex(vertex);
-	if (node.empty()) {
+void PriorityQueue<T>::deleteElement(T element) {
+	int index = getElementIndex(element);
+	if (index == -1) {
 		return; //this vertex does not exist in the queue.
 	}
 
 	// Fill up the node with the last node in the queue and either bubble up or sink down.
 
-	int currentNode = node[0];
-	m_queue[currentNode] = m_queue[m_queue.size() - 1];
+	m_queue[index] = m_queue[m_queue.size() - 1];
 	m_queue.resize(m_queue.size() - 1);
 
-	vector<int> parent = getParent(currentNode);
+	int parentIndex = getParentIndex(index);
 
-	if (parent.empty()) {
-		sinkDown(currentNode);
+	if (isRoot(index)) {
+		sinkDown(index);
 		return;
 	}
 
-	if (m_queue[parent[0]] > m_queue[currentNode]) {
-		bubbleup(currentNode);
+	if (m_queue[parentIndex] > m_queue[index]) {
+		bubbleup(index);
 	} else {
-		sinkDown(currentNode);
+		sinkDown(index);
 	}
 
 }
 
 template<typename T>
-vector<int> PriorityQueue<T>::getParent(int node) {
-	vector<int> parent;
-	if (node == 0) {
-		return parent;
+int PriorityQueue<T>::getParentIndex(int index) {
+	int parentIndex;
+	if (isRoot(index)) {
+		parentIndex = index; // returns the same index if it's the root element
 	}
 	//else
-	int temp = static_cast<int>((node - 1) / 2);
-	parent.push_back(temp);
-	return parent;
+	parentIndex = static_cast<int>((index - 1) / 2);
+	return parentIndex;
 }
 
 template<typename T>
-vector<int> PriorityQueue<T>::getChildren(int node) {
-	vector<int> children;
+bool PriorityQueue<T>::isRoot(int index) {
+	if (index == 0) {
+		return true;
+	}
+	// else
+	return false;
+}
 
-	if ((2 * node + 1) < m_queue.size()) {
-		children.push_back(2 * node + 1);
+template<typename T>
+vector<unsigned int> PriorityQueue<T>::getChildrenIndex(int index) {
+	vector<unsigned int> childrenIndex;
+
+	if ((2 * index + 1) < m_queue.size()) {
+		childrenIndex.push_back(2 * index + 1);
 	}
 
-	if ((2 * node + 2) < m_queue.size()) {
-		children.push_back(2 * node + 2);
+	if ((2 * index + 2) < m_queue.size()) {
+		childrenIndex.push_back(2 * index + 2);
 	}
 
-	return children;
+	return childrenIndex;
 
 }
 
 template<typename T>
-int PriorityQueue<T>::getTotalNodes() {
+int PriorityQueue<T>::getTotalElements() {
 	return m_queue.size();
 }
 
 template<typename T>
-vector<int> PriorityQueue<T>::getVertexIndex(T vertex) {
-	vector<int> index;
+int PriorityQueue<T>::getElementIndex(T element) {
+	// returns -1 if element not found
+	int index = -1;
 	for (int i = 0; i < m_queue.size(); i++) {
-		if (m_queue[i] == vertex) {
-			index.push_back(i);
+		if (m_queue[i] == element) {
+			index = i;
 			break;
 		}
 	}
+
+	// else
 	return index;
 }
 
 template<typename T>
-void PriorityQueue<T>::bubbleup(int node) {
+void PriorityQueue<T>::bubbleup(int index) {
 	bool isMinHeap = false;
-	int currentNode = node; // Start at the last node as that's the new addition.
+	int currentIndex = index;
 
 	while (!isMinHeap) {
-		vector<int> parent = getParent(currentNode);
-		if (parent.empty()) {
+		if (isRoot(currentIndex)) {
 			isMinHeap = true;
 			return; // It's the root node.
 		}
 
-		if (m_queue[parent[0]] > m_queue[currentNode]) {
-			swapNodes(currentNode, parent[0]);
-			currentNode = parent[0];
+		// else
+		int parentIndex = getParentIndex(currentIndex);
+
+		if (m_queue[parentIndex] > m_queue[currentIndex]) {
+			swapElements(currentIndex, parentIndex);
+			currentIndex = parentIndex;
 		} else {
 			isMinHeap = true;
 		}
@@ -205,21 +229,22 @@ void PriorityQueue<T>::bubbleup(int node) {
 }
 
 template<typename T>
-void PriorityQueue<T>::sinkDown(int node) {
-	int currentNode = node;
+void PriorityQueue<T>::sinkDown(int index) {
+	int currentIndex = index;
 	bool isMinHeap = false;
 	while (!isMinHeap) {
-		vector<int> children = getChildren(currentNode);
-		int NumChildren = children.size();
+		vector<unsigned int> childrenIndex = getChildrenIndex(currentIndex);
+		int NumChildren = childrenIndex.size();
 		switch (NumChildren) {
 		case 0:
-			isMinHeap = 1; // Only the root node is left.
+			isMinHeap = true; // It's a leaf. No need to sink down any further.
 			break;
 
-		case 1:
-			if (m_queue[currentNode] > m_queue[children[0]]) {
-				swapNodes(currentNode, children[0]);
-				currentNode = children[0];
+		case 1: // 1 children
+
+			if (m_queue[currentIndex] > m_queue[childrenIndex[0]]) {
+				swapElements(currentIndex, childrenIndex[0]);
+				currentIndex = childrenIndex[0];
 			} else {
 				isMinHeap = true;
 			}
@@ -227,12 +252,12 @@ void PriorityQueue<T>::sinkDown(int node) {
 
 		case 2:
 			// Get the smaller children first.
-			int smallerChildren =
-					(m_queue[children[0]] < m_queue[children[1]]) ?
-							children[0] : children[1];
-			if (m_queue[currentNode] > m_queue[smallerChildren]) {
-				swapNodes(currentNode, smallerChildren);
-				currentNode = smallerChildren;
+			int smallerChildrenIndex =
+					(m_queue[childrenIndex[0]] < m_queue[childrenIndex[1]]) ?
+							childrenIndex[0] : childrenIndex[1];
+			if (m_queue[currentIndex] > m_queue[smallerChildrenIndex]) {
+				swapElements(currentIndex, smallerChildrenIndex);
+				currentIndex = smallerChildrenIndex;
 			} else {
 				isMinHeap = true;
 			}
@@ -242,11 +267,16 @@ void PriorityQueue<T>::sinkDown(int node) {
 }
 
 template<typename T>
-void PriorityQueue<T>::swapNodes(int node1, int node2) {
+void PriorityQueue<T>::swapElements(int index1, int index2) {
 
-	T temp = m_queue[node1];
-	m_queue[node1] = m_queue[node2];
-	m_queue[node2] = temp;
+	T temp = m_queue[index1];
+	m_queue[index1] = m_queue[index2];
+	m_queue[index2] = temp;
+}
+
+template<typename T>
+T PriorityQueue<T>::getElement(int index) {
+	return m_queue[index];
 }
 
 template<typename T>
@@ -254,5 +284,12 @@ void PriorityQueue<T>::printQueue() {
 	for (typename vector<T>::iterator it = m_queue.begin(); it != m_queue.end();
 			it++) {
 		cout << *it << endl;
+	}
+}
+
+template<typename T>
+void PriorityQueue<T>::printQueueCost() {
+	for (int i = 0; i < m_queue.size(); i++) {
+		cout << m_queue[i].getCost() << endl;
 	}
 }
