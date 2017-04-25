@@ -11,12 +11,12 @@
 using namespace std;
 
 NodeInfo::NodeInfo(int node) :
-		m_node(node), m_prevNode(node) {
+		m_node(node), m_parent(node) {
 	m_cost = INT_MAX;
 }
 
-NodeInfo::NodeInfo(int node, int prevNode) :
-		m_node(node), m_prevNode(prevNode) {
+NodeInfo::NodeInfo(int node, int parent) :
+		m_node(node), m_parent(parent) {
 	m_cost = INT_MAX;
 }
 

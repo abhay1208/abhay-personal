@@ -10,23 +10,24 @@
 #include <algorithm>
 using namespace std;
 
-ShortestPath::ShortestPath(const Graph & g, int sNode, int dNode) :
-		m_g(g), m_sNode(sNode), m_dNode(dNode) {
+ShortestPath::ShortestPath(const Graph & g) :
+		m_g(g) {
 	int totalNodes = m_g.getNumNodes();
 
 	for (int i = 0; i < totalNodes; i++) {
-		m_queue.push(NodeInfo(i));
+		m_pq.push(NodeInfo(i));
 	}
 }
 
-void ShortestPath::findShortestPath() {
+vector<int> ShortestPath::findShortestPath(int sNode, int dNode) {
+	m_sNode = sNode;
+	m_dNode = dNode;
 	bool pathFound = false;
 	// Do this for the first source node.
 	NodeInfo currentNode(m_sNode);
 	currentNode.setCost(0);
-	m_queue.deleteElement(currentNode);
+	m_pq.deleteElement(currentNode);
 	m_visitedNodes.push_back(currentNode);
-	m_queue.printQueue();
 	while (!pathFound) {
 
 		vector < NodeInfo > unvN = getUnvisitedNbrs(currentNode.getNode());
@@ -36,31 +37,30 @@ void ShortestPath::findShortestPath() {
 		for (int i = 0; i < unvN.size(); i++) {
 			int cost = m_g.getEdgeValue(currentNode.getNode(),
 					unvN[i].getNode());
-			unvN[i].setPrevNode(currentNode.getNode());
+			unvN[i].setParent(currentNode.getNode());
 			unvN[i].setCost(currentNode.getCost() + cost);
 			updateQueue (unvN[i]);
 		}
 
 		if (isInVisitedNodes (m_dNode)) {
 			pathFound = true;
-			printPath();
 		} else {
 			currentNode = getNextNode();
 		}
 	}
-
+	return getShortestPath();;
 }
 
 void ShortestPath::updateQueue(NodeInfo n) {
-	int idx = m_queue.getElementIndex(n);
-	NodeInfo qn = m_queue.getElement(idx);
+	int idx = m_pq.getElementIndex(n);
+	NodeInfo qn = m_pq.getElement(idx);
 	if (qn.getCost() > n.getCost()) {
-		m_queue.changePriority(n);
+		m_pq.changeElement(qn, n);
 	}
 }
 
 NodeInfo ShortestPath::getNextNode() {
-	NodeInfo n = m_queue.pop();
+	NodeInfo n = m_pq.pop();
 	m_visitedNodes.push_back(n);
 	return n;
 }
@@ -85,7 +85,46 @@ bool ShortestPath::isInVisitedNodes(int node) {
 	return false;
 }
 
-void ShortestPath::printPath() {
+vector<int> ShortestPath::getShortestPath() {
+
+	// Trace back the path.
+	int currentNode = m_dNode;
+	vector<int> path;
+	while (currentNode != m_sNode) {
+		for (int j = 0; j < m_visitedNodes.size(); j++) {
+			if (m_visitedNodes[j].getNode() == currentNode) {
+				path.push_back(m_visitedNodes[j].getNode());
+				if (m_visitedNodes[j].getNode()
+						== m_visitedNodes[j].getParent()) {
+					cout << "There is no path between Node " << m_sNode
+							<< " to " << m_dNode << endl;
+					return {}; // return an empty vector
+				} else {
+					currentNode = m_visitedNodes[j].getParent();
+				}
+			}
+		}
+	}
+	path.push_back(m_sNode);
+	std::reverse(path.begin(), path.end());
+	printPath(path); // Call this function to print path From Node s to Node d
+	return path;
+}
+
+void ShortestPath::printPath(vector<int> path) {
+	cout << "Shortest path cost from Node " << m_sNode << " to Node " << m_dNode
+			<< " is " << getPathCost() << endl;
+	for (int i = 0; i < path.size(); i++) {
+		cout << path[i];
+		if (i != path.size() - 1) {
+			cout << "->";
+		}
+	}
+	cout << endl;
+}
+
+int ShortestPath::getPathCost() {
+// Get the total distance for this path.
 	int index;
 	for (int j = 0; j < m_visitedNodes.size(); j++) {
 		if (m_visitedNodes[j].getNode() == m_dNode) {
@@ -95,8 +134,7 @@ void ShortestPath::printPath() {
 	}
 
 	NodeInfo n = m_visitedNodes[index];
-	cout << "Shortest distance from Node  " << m_sNode << " to Node" << m_dNode
-			<< " is " << n.getCost() << endl;
+	return n.getCost();
 }
 
 ShortestPath::~ShortestPath() {

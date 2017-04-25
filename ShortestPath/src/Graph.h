@@ -7,10 +7,9 @@
 
 #ifndef GRAPH_H_
 #define GRAPH_H_
-#endif
 
 /*
- Assignment 1 - Graph implemetaion
+ Assignment 2 - Graph implemetaion
  Author - Abhay Gupta
  Date - 04/07/2017
  */
@@ -20,15 +19,16 @@
 #include <time.h>
 #include <cstdlib>
 
-using namespace std;
-
 class Graph {
+	/*
+	 * Graph reprensation using an array.
+	 */
 public:
 
-	Graph(double density, int maxDistance, int Nodes = 5);
-	Graph(vector<vector<int> > g);
+	Graph(double density, int maxDistance, int Nodes);
+	Graph(const std::vector<std::vector<int> > & g);
 	void printGraph();
-	vector<int> getNeighbours(int v);
+	std::vector<int> getNeighbours(int v);
 	int getNumNodes();
 	int getNumEdges();
 	bool isAdjacent(int node1, int node2);
@@ -43,9 +43,10 @@ private:
 	double m_density;
 	int m_maxDistance;
 	int m_Nodes;
-	vector<vector<int> > m_data;
+	std::vector<std::vector<int> > m_data;
 
 	void createGraph();
 	bool prob();
 	int generateDistance();
 };
+#endif

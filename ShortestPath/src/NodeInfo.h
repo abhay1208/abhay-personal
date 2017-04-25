@@ -4,34 +4,37 @@
  *  Created on: Apr 17, 2017
  *      Author: Abhay
  */
-#include <iostream>
 #ifndef SRC_NodeINFO_H_
 #define SRC_NodeINFO_H_
-using namespace std;
-class NodeInfo {
-public:
-	NodeInfo() {
-	}
-	;
 
+#include <iostream>
+class NodeInfo {
+	/*
+	 * This class is meant to store two pieces of information for each node.
+	 * Node's parent and the cost associated with the node. For Dijkstra's
+	 * algorithm, node's parent is updated with it's parent at every iteration
+	 * And the cost is updated as the distance from source node to this node.
+	 */
+public:
+	NodeInfo() = default;
 	NodeInfo(int node);
-	NodeInfo(int node, int prevNode);
+	NodeInfo(int node, int parent);
 
 	// Getters
 
 	int getNode() const {
 		return m_node;
 	}
-	int getPrevNode() const {
-		return m_prevNode;
+	int getParent() const {
+		return m_parent;
 	}
 	int getCost() const {
 		return m_cost;
 	}
 
 	// Setters
-	void setPrevNode(int prevNode) {
-		m_prevNode = prevNode;
+	void setParent(int parent) {
+		m_parent = parent;
 	}
 	void setCost(int cost) {
 		m_cost = cost;
@@ -50,7 +53,7 @@ public:
 	virtual ~NodeInfo();
 private:
 	int m_node;
-	int m_prevNode;
+	int m_parent;
 	int m_cost;
 }
 ;

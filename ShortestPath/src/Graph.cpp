@@ -13,7 +13,7 @@ Graph::Graph(double density, int maxDistance, int Nodes) :
 	createGraph();
 }
 
-Graph::Graph(vector<vector<int> > g) {
+Graph::Graph(const vector<vector<int> > & g) {
 	m_data = g;
 	vector<int> column = g[0];
 	m_Nodes = column.size();

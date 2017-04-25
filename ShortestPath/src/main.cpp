@@ -1,35 +1,50 @@
 #include <iostream>
 #include <vector>
+#include <algorithm>
 #include <time.h>
 #include "ShortestPath.h"
+#include <numeric>
 using namespace std;
 
 int main() {
-	int myArray[9][9] =
-			{ { 0, 4, 0, 0, 0, 0, 0, 8, 0 }, { 4, 0, 8, 0, 0, 0, 0, 11, 0 }, {
-					0, 8, 0, 7, 0, 4, 0, 0, 2 }, { 0, 0, 7, 0, 9, 14, 0, 0, 0 },
-					{ 0, 0, 0, 9, 0, 10, 0, 0, 0 }, { 0, 0, 4, 14, 10, 0, 2, 0,
-							0 }, { 0, 0, 0, 0, 0, 2, 0, 1, 6 }, { 8, 11, 0, 0,
-							0, 0, 1, 0, 7 }, { 0, 0, 2, 0, 0, 0, 6, 7, 0 } };
+	srand (time(NULL));
 
-	vector < vector<int> > v;
-	for (int i = 0; i < 9; i++) {
-		vector<int> columnVector(9, 0);
-		v.push_back(columnVector);
-	}
+	/*
+	 * Run Montey Carlo simulation for density 20
+	 */
 
-	for (int i = 0; i < 9; i++) {
-		for (int j = 0; j < 9; j++) {
-			v[i][j] = myArray[i][j];
+cout	<< "Running simulation for a 50 nodes graph of density 20" << endl;
+	vector <int> pathCost;
+	for (int i = 1;i<50;i++) {
+		Graph g(20, 10, 50);
+		ShortestPath sp(g);
+		vector<int> path = sp.findShortestPath(0, i);
+		//Get path cost if there exists a path from Node 0 to Node i
+		if (!path.empty()) {
+			pathCost.push_back(sp.getPathCost());
 		}
 	}
+	double sum = std::accumulate(pathCost.begin(),pathCost.end(), 0);
+	cout << "Average path cost for all shortest paths with a graph of density 20 is " << sum/pathCost.size() << endl;
 
-	Graph g(v);
-	g.printGraph();
-	cout << "total nodes: ";
-	cout << g.getNumNodes() << endl;
-	ShortestPath path(g, 0, 4);
-	path.findShortestPath();
+	/*
+	 * Run Montey Carlo simulation for density 40
+	 */
+
+	cout << "Running simulation for a 50 nodes graph of density 40" << endl;
+
+	pathCost.clear();
+	for (int i = 1;i<50;i++) {
+		Graph g(40, 10, 50);
+		ShortestPath sp(g);
+		vector<int> path = sp.findShortestPath(0, i);
+		//Get path cost if there exists a path from Node 0 to Node i
+		if (!path.empty()) {
+			pathCost.push_back(sp.getPathCost());
+		}
+	}
+	sum = std::accumulate(pathCost.begin(),pathCost.end(), 0);
+	cout << "Average path cost for all shortest paths with a graph of density 40 is " << sum/pathCost.size() << endl;
 	return 0;
 
 }

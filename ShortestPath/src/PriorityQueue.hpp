@@ -1,29 +1,31 @@
+#ifndef PRIORITY_QUEUE_H
+#define PRIORITY_QUEUE_H
+
 #include <iostream>
 #include <vector>
-using namespace std;
 
 template<class T>
 class PriorityQueue {
+	/*
+	 * Generic Min heap implementation.
+	 */
 public:
-	PriorityQueue() {
-	}
-	;
-	PriorityQueue(const vector<T>& data);
+	PriorityQueue() = default;
+	PriorityQueue(const std::vector<T>& data);
 	PriorityQueue(const T data[], int length);
 
 	T pop();
 	void push(T element);
-	void changePriority(T element);
+	void changeElement(T element, const T& newElement);
 	void deleteElement(T element);
 	int getTotalElements();
 	int getElementIndex(T element);
 	T getElement(int index);
 	void printQueue();
-	void printQueueCost();
 
 private:
-	vector<T> m_queue;
-	vector<unsigned int> getChildrenIndex(int index);
+	std::vector<T> m_queue;
+	std::vector<unsigned int> getChildrenIndex(int index);
 	int getParentIndex(int index);
 	bool isRoot(int index);
 	void heapify();
@@ -35,13 +37,9 @@ private:
 ;
 
 template<typename T>
-PriorityQueue<T>::PriorityQueue(const vector<T>& data) {
-	for (unsigned int i = 0; i < data.size(); i++) {
-		m_queue.push_back(data[i]);
-	}
-
+PriorityQueue<T>::PriorityQueue(const std::vector<T>& data) :
+		m_queue(data) {
 	heapify();
-
 }
 
 template<typename T>
@@ -76,8 +74,8 @@ template<typename T>
 T PriorityQueue<T>::pop() {
 	T element;
 	if (m_queue.empty()) {
-		cout << "Nothing to pop. Queue is empty" << endl;
-		element = 0;
+		std::cout << "Nothing to pop. Queue is empty" << std::endl;
+		element = -1;
 	}
 	// Get the root element
 	element = m_queue[0];
@@ -94,7 +92,7 @@ T PriorityQueue<T>::pop() {
 
 }
 template<typename T>
-void PriorityQueue<T>::changePriority(T element) {
+void PriorityQueue<T>::changeElement(T element, const T& newElement) {
 
 	int index = getElementIndex(element);
 
@@ -102,10 +100,7 @@ void PriorityQueue<T>::changePriority(T element) {
 		return; // This vertex is not there in the priority queue.
 	}
 
-	m_queue[index].setCost(element.getCost());
-	m_queue[index].setPrevNode(element.getPrevNode());
-
-	// else update the cost of this vertex and either bubbleup or sinkDown.
+	m_queue[index] = newElement;
 	int parentIndex = getParentIndex(index);
 
 	if (isRoot(index)) {
@@ -161,16 +156,12 @@ int PriorityQueue<T>::getParentIndex(int index) {
 
 template<typename T>
 bool PriorityQueue<T>::isRoot(int index) {
-	if (index == 0) {
-		return true;
-	}
-	// else
-	return false;
+	return index == 0;
 }
 
 template<typename T>
-vector<unsigned int> PriorityQueue<T>::getChildrenIndex(int index) {
-	vector<unsigned int> childrenIndex;
+std::vector<unsigned int> PriorityQueue<T>::getChildrenIndex(int index) {
+	std::vector<unsigned int> childrenIndex;
 
 	if ((2 * index + 1) < m_queue.size()) {
 		childrenIndex.push_back(2 * index + 1);
@@ -233,7 +224,8 @@ void PriorityQueue<T>::sinkDown(int index) {
 	int currentIndex = index;
 	bool isMinHeap = false;
 	while (!isMinHeap) {
-		vector<unsigned int> childrenIndex = getChildrenIndex(currentIndex);
+		std::vector<unsigned int> childrenIndex = getChildrenIndex(
+				currentIndex);
 		int NumChildren = childrenIndex.size();
 		switch (NumChildren) {
 		case 0:
@@ -281,15 +273,9 @@ T PriorityQueue<T>::getElement(int index) {
 
 template<typename T>
 void PriorityQueue<T>::printQueue() {
-	for (typename vector<T>::iterator it = m_queue.begin(); it != m_queue.end();
-			it++) {
-		cout << *it << endl;
+	for (typename std::vector<T>::iterator it = m_queue.begin();
+			it != m_queue.end(); it++) {
+		std::cout << *it << std::endl;
 	}
 }
-
-template<typename T>
-void PriorityQueue<T>::printQueueCost() {
-	for (int i = 0; i < m_queue.size(); i++) {
-		cout << m_queue[i].getCost() << endl;
-	}
-}
+#endif //
