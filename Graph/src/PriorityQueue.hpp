@@ -25,7 +25,7 @@ public:
 
 private:
 	std::vector<T> m_queue;
-	std::vector<unsigned int> getChildrenIndex(int index);
+	std::vector<unsigned int> getChildrenIndex(unsigned int index);
 	int getParentIndex(int index);
 	bool isRoot(int index);
 	void heapify();
@@ -160,7 +160,7 @@ bool PriorityQueue<T>::isRoot(int index) {
 }
 
 template<typename T>
-std::vector<unsigned int> PriorityQueue<T>::getChildrenIndex(int index) {
+std::vector<unsigned int> PriorityQueue<T>::getChildrenIndex(unsigned int index) {
 	std::vector<unsigned int> childrenIndex;
 
 	if ((2 * index + 1) < m_queue.size()) {
@@ -184,7 +184,7 @@ template<typename T>
 int PriorityQueue<T>::getElementIndex(T element) {
 	// returns -1 if element not found
 	int index = -1;
-	for (int i = 0; i < m_queue.size(); i++) {
+	for (unsigned int i = 0; i < m_queue.size(); i++) {
 		if (m_queue[i] == element) {
 			index = i;
 			break;

@@ -202,12 +202,12 @@ vector<int> Graph::findShortestPath(int sNode, int dNode) {
 
 		// Get it's neighbors and their cost
 
-		for (int i = 0; i < unvN.size(); i++) {
+		for (auto &it:unvN) {
 			int cost = getEdgeValue(currentNode.getNode(),
-					unvN[i].getNode());
-			unvN[i].setParent(currentNode.getNode());
-			unvN[i].setCost(currentNode.getCost() + cost);
-			updateQueue (unvN[i]);
+					it.getNode());
+			it.setParent(currentNode.getNode());
+			it.setCost(currentNode.getCost() + cost);
+			updateQueue (it);
 		}
 
 		if (isInVisitedNodes (m_dNode)) {
@@ -244,12 +244,12 @@ int Graph::findMST() {
 
 		// Get it's neighbors and their cost
 
-		for (int i = 0; i < unvN.size(); i++) {
+		for (auto &it:unvN) {
 			int cost = getEdgeValue(currentNode.getNode(),
-					unvN[i].getNode());
-			unvN[i].setParent(currentNode.getNode());
-			unvN[i].setCost(cost);
-			updateQueue (unvN[i]);
+					it.getNode());
+			it.setParent(currentNode.getNode());
+			it.setCost(cost);
+			updateQueue(it);
 		}
 
 		if (m_pq.getTotalElements() == 0) {
@@ -291,9 +291,9 @@ NodeInfo Graph::getNextNode() {
 vector<NodeInfo> Graph::getUnvisitedNbrs(int node) {
 	vector<int> n = getNeighbours(node);
 	vector < NodeInfo > un;
-	for (int i = 0; i < n.size(); i++) {
-		if (!isInVisitedNodes(n[i])) {
-			un.push_back(NodeInfo(n[i]));
+	for (auto it:n) {
+		if (!isInVisitedNodes(it)) {
+			un.push_back(NodeInfo(it));
 		}
 	}
 	return un;
@@ -303,8 +303,8 @@ vector<NodeInfo> Graph::getUnvisitedNbrs(int node) {
  * Check if a node is in visited nodes
  */
 bool Graph::isInVisitedNodes(int node) {
-	for (int j = 0; j < m_visitedNodes.size(); j++) {
-		if (m_visitedNodes[j].getNode() == node) {
+	for (auto it:m_visitedNodes) {
+		if (it.getNode() == node) {
 			return true;
 		}
 	}
@@ -318,16 +318,16 @@ vector<int> Graph::getShortestPath() {
 	int currentNode = m_dNode;
 	vector<int> path;
 	while (currentNode != m_sNode) {
-		for (int j = 0; j < m_visitedNodes.size(); j++) {
-			if (m_visitedNodes[j].getNode() == currentNode) {
-				path.push_back(m_visitedNodes[j].getNode());
-				if (m_visitedNodes[j].getNode()
-						== m_visitedNodes[j].getParent()) {
+		for (auto it:m_visitedNodes) {
+			if (it.getNode() == currentNode) {
+				path.push_back(it.getNode());
+				if (it.getNode()
+						== it.getParent()) {
 					cout << "There is no path between Node " << m_sNode
 							<< " to " << m_dNode << endl;
 					return {}; // return an empty vector
 				} else {
-					currentNode = m_visitedNodes[j].getParent();
+					currentNode = it.getParent();
 				}
 			}
 		}
@@ -341,7 +341,7 @@ vector<int> Graph::getShortestPath() {
 void Graph::printPath(vector<int> path) {
 	cout << "Shortest path cost from Node " << m_sNode << " to Node " << m_dNode
 			<< " is " << getShortestPathCost() << endl;
-	for (int i = 0; i < path.size(); i++) {
+	for (unsigned int i = 0; i < path.size(); i++) {
 		cout << path[i];
 		if (i != path.size() - 1) {
 			cout << "->";
@@ -353,7 +353,7 @@ void Graph::printPath(vector<int> path) {
 int Graph::getShortestPathCost() {
 	// Get the total distance for this path.
 	int index;
-	for (int j = 0; j < m_visitedNodes.size(); j++) {
+	for (unsigned int j = 0; j < m_visitedNodes.size(); j++) {
 		if (m_visitedNodes[j].getNode() == m_dNode) {
 			index = j;
 			break;
@@ -366,7 +366,7 @@ int Graph::getShortestPathCost() {
 
 void Graph::printMST() {
 	cout << "Edge \t \t" << "Cost" << endl;
-	for (int i = 1; i < m_visitedNodes.size(); i++) {
+	for (unsigned int i = 1; i < m_visitedNodes.size(); i++) {
 		cout << m_visitedNodes[i].getParent() << "->"
 				<< m_visitedNodes[i].getNode() << "\t \t";
 		cout << m_visitedNodes[i].getCost() << '\n';
@@ -375,7 +375,7 @@ void Graph::printMST() {
 
 int Graph::getMSTCost() {
 	int cost = 0;
-	for (int i = 1; i < m_visitedNodes.size(); i++) {
+	for (unsigned int i = 1; i < m_visitedNodes.size(); i++) {
 		cost += m_visitedNodes[i].getCost();
 	}
 	cout << "Minimum spanning tree cost for the given data file graph is "
