@@ -3,19 +3,20 @@
 #include <algorithm>
 #include <time.h>
 #include <numeric>
-
-#include "PrimMST.h"
+#include "Graph.h"
 using namespace std;
 
 int main() {
+	srand (time(NULL));
 
 	Graph g("sampleData.txt");
 	cout << "Constructed graph from the given data file:" << endl;
 	g.printGraph();
-	PrimMST p(g);
 	cout << "\n \n";
-	p.findMST();
+	g.findMST();
+	g.findShortestPath(0,18);
+	g.getShortestPathCost();
+	//g.getShortestPathCost();
+	cout << "Total nodes are " << g.getNumNodes() << endl;
 	return 0;
-
 }
-
