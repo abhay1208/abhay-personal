@@ -48,7 +48,6 @@ public:
 
 	/* Method to implement Prim Minimum Spanning Tree algorithm */
 	int findMST();
-	int getMSTCost();
 
 	/* Destructor */
 	~Graph();
@@ -79,6 +78,7 @@ private:
 	void printPath(std::vector<int> path);
 
 	/* Print Minimum Spanning Tree */
+	int getMSTCost();
 	void printMST();
 
 

@@ -15,8 +15,5 @@ int main() {
 	cout << "\n \n";
 	g.findMST();
 	g.findShortestPath(0,18);
-	g.getShortestPathCost();
-	//g.getShortestPathCost();
-	cout << "Total nodes are " << g.getNumNodes() << endl;
 	return 0;
 }

@@ -14,6 +14,8 @@ using namespace std;
 Graph::Graph(double density, int maxDistance, int Nodes) :
 								m_density(density), m_maxDistance(maxDistance), m_Nodes(Nodes) {
 	createGraph();
+	m_dNode = 0;
+	m_sNode = 0;
 }
 
 Graph::Graph(const vector<vector<int> > & g) {
@@ -22,6 +24,8 @@ Graph::Graph(const vector<vector<int> > & g) {
 	m_Nodes = column.size();
 	m_dNode = 0;
 	m_sNode = 0;
+	m_density = -1;
+	m_maxDistance = -1;
 }
 
 Graph::Graph(std::string filename) {
@@ -34,6 +38,12 @@ Graph::Graph(std::string filename) {
 		v[*++start][*++start] = *++start;
 	}
 	m_data = v;
+	vector<int> column = v[0];
+	m_Nodes = column.size();
+	m_dNode = 0;
+	m_sNode = 0;
+	m_density = -1;
+	m_maxDistance = -1;
 }
 
 void Graph::createGraph() {
@@ -187,7 +197,6 @@ vector<int> Graph::findShortestPath(int sNode, int dNode) {
 	for (int i = 0; i < totalNodes; i++) {
 		m_pq.push(NodeInfo(i));
 	}
-	cout << "size of m_pq is in Dijk " << m_pq.getTotalElements() << endl;
 	m_sNode = sNode;
 	m_dNode = dNode;
 	bool pathFound = false;
@@ -231,7 +240,6 @@ int Graph::findMST() {
 	for (int i = 0; i < totalNodes; i++) {
 		m_pq.push(NodeInfo(i));
 	}
-	cout << "size of m_pq is in MST " << m_pq.getTotalElements() << endl;
 
 	bool MSTFound = false;
 	// Starting with node 0
@@ -352,6 +360,9 @@ void Graph::printPath(vector<int> path) {
 
 int Graph::getShortestPathCost() {
 	// Get the total distance for this path.
+	if (m_visitedNodes.empty()){
+		return -1;
+	}
 	int index;
 	for (unsigned int j = 0; j < m_visitedNodes.size(); j++) {
 		if (m_visitedNodes[j].getNode() == m_dNode) {
