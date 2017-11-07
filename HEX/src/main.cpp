@@ -8,9 +8,10 @@ using namespace std;
 
 int main() {
 	Graph* g;
-	Hex hex(3);
+	Hex hex(10);
 	g = &hex;
 	hex.createBoard();
 	g->findShortestPath(0, 8);
+	hex.printBoard();
 	return 0;
 }

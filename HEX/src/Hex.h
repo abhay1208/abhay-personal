@@ -14,12 +14,12 @@ class Hex: public Graph {
 public:
 	Hex(int boardSize);
 	void createBoard();
+	void printBoard();
 	virtual ~Hex();
 
 private:
 	int m_boardSize;
 	void addEdge(int node1, int node2);
-
 	int cell2node(int i, int j) const;
 	std::vector<int> node2cell(int n) const;
 

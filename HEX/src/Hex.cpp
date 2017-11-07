@@ -116,6 +116,35 @@ void Hex::createBoard(){
 
 }
 
+void Hex::printBoard(){
+	for(auto i = 0; i<m_boardSize; i++){
+		for(auto j = 0; j<1; j++){
+			std::cout << " ";
+		}
+		std::cout << i;
+	}
+
+	for(auto i = 0; i < m_boardSize; i++){
+		std::cout <<  "" << std::endl;
+		for(auto j = 0; j<i; j++){
+			std::cout << " ";
+		}
+		std::cout << i << " " ;
+		for(auto i = 0; i < m_boardSize; i++){
+			std::cout << "_ ";
+		}
+		std::cout << i;
+	}
+
+	std::cout << "\n";
+	for(auto j = 0; j<m_boardSize+2; j++){
+		std::cout << " ";
+	}
+	for(auto i = 0; i<m_boardSize; i++){
+		std::cout << i << " ";
+	}
+}
+
 void Hex::addEdge(int node1, int node2) {
 	if (node1 == node2) {
 		std::cout << "Loops not allowed" << std::endl;
