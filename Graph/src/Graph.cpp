@@ -333,7 +333,7 @@ vector<int> Graph::getShortestPath() {
 						== it.getParent()) {
 					cout << "There is no path between Node " << m_sNode
 							<< " to " << m_dNode << endl;
-					return {}; // return an empty vector
+					return vector<int>(0); // return an empty vector
 				} else {
 					currentNode = it.getParent();
 				}
