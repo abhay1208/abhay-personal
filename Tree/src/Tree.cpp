@@ -1,4 +1,6 @@
+#include <memory>
 #include "Tree.h"
+typedef std::shared_ptr<Node> SPtr;
 
 Tree::Tree(const std::vector<int>& v)
 {
@@ -28,26 +30,26 @@ void Tree::constructTree(const std::vector<int>& v)
     // Root is reprsented by -1
 
     int rootValue = umap[-1][0];
-    mp_root =  new Node(rootValue);
+    mp_root = std::make_shared<Node> (rootValue);
 
-    std::queue<Node* > q;
+    std::queue<SPtr> q;
     q.push(mp_root);
 
     while (!q.empty())
     {
-        Node* currentNode = q.front();
+        SPtr currentNode = q.front();
         q.pop();
         std::vector<int> children = umap[currentNode->m_val];
 
         if (children.size() >= 1)
         {
-            currentNode->mp_left = new Node(children[0]);
+            currentNode->mp_left = std::make_shared<Node> (children[0]);
             q.push(currentNode->mp_left);
         }
 
         if(children.size() == 2)
         {
-            currentNode->mp_right = new Node(children[1]);
+            currentNode->mp_right = std::make_shared<Node> (children[1]);
             q.push(currentNode->mp_right);
         }
 
@@ -57,8 +59,8 @@ void Tree::constructTree(const std::vector<int>& v)
 void Tree::printLevelOrder()
 
 {
-    std::queue<Node*> q;
-    if(mp_root == NULL)
+    std::queue<SPtr> q;
+    if(mp_root == nullptr)
     {
         std::cout << "Tree is empty\n";
         return;
@@ -67,14 +69,14 @@ void Tree::printLevelOrder()
 
     while(!q.empty())
     {
-        Node* currentNode = q.front();
+        SPtr currentNode = q.front();
         q.pop();
-        if(currentNode->mp_left != NULL)
+        if(currentNode->mp_left != nullptr)
         {
             q.push(currentNode->mp_left);
         }
 
-        if(currentNode->mp_right != NULL)
+        if(currentNode->mp_right != nullptr)
         {
             q.push(currentNode->mp_right);
         }
@@ -87,5 +89,4 @@ void Tree::printLevelOrder()
 
 Tree::~Tree()
 {
-    std::cout << "Tree Destroyer called!" << std::endl;
 }

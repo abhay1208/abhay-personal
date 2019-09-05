@@ -8,7 +8,7 @@ class Tree
 {
 public:
 /********* Public Members **********/
-Node* mp_root;
+std::shared_ptr<Node> mp_root;
 
 /********* Public Methods **********/
 Tree(const std::vector<int>& v);

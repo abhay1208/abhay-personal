@@ -1,13 +1,12 @@
 #include "Node.h"
 
-Node::Node(int _val, Node* _left, Node* _right) : 
+Node::Node(int _val) : 
 m_val(_val), 
-mp_left(_left), 
-mp_right(_right)
+mp_left(nullptr), 
+mp_right(nullptr)
 {
 }
 
 Node::~Node()
 {
-    std::cout << "Node destroyer called!\n" ;
 }
