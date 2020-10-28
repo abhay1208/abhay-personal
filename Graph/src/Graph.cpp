@@ -11,14 +11,15 @@
 
 using namespace std;
 
-Graph::Graph(double density, int maxDistance, int Nodes) :
-								m_density(density), m_maxDistance(maxDistance), m_Nodes(Nodes) {
+Graph::Graph(double density, int maxDistance, int Nodes) : m_density(density), m_maxDistance(maxDistance), m_Nodes(Nodes)
+{
 	createGraph();
 	m_dNode = 0;
 	m_sNode = 0;
 }
 
-Graph::Graph(const vector<vector<int> > & g) {
+Graph::Graph(const vector<vector<int>> &g)
+{
 	m_data = g;
 	vector<int> column = g[0];
 	m_Nodes = column.size();
@@ -28,13 +29,15 @@ Graph::Graph(const vector<vector<int> > & g) {
 	m_maxDistance = -1;
 }
 
-Graph::Graph(std::string filename) {
+Graph::Graph(std::string filename)
+{
 	ifstream data_file(filename.c_str());
 	istream_iterator<int> start(data_file), end;
 	m_Nodes = *start;
-	std::vector<std::vector<int> > v(m_Nodes, std::vector<int> (m_Nodes)); // Defaults to zero initial value
+	std::vector<std::vector<int>> v(m_Nodes, std::vector<int>(m_Nodes)); // Defaults to zero initial value
 
-	while (start != end) {
+	while (start != end)
+	{
 		v[*++start][*++start] = *++start;
 	}
 	m_data = v;
@@ -46,13 +49,15 @@ Graph::Graph(std::string filename) {
 	m_maxDistance = -1;
 }
 
-void Graph::createGraph() {
+void Graph::createGraph()
+{
 
 	/*
 	 * Initializing the graph 2-D vector to all zeros first
 	 */
 
-	for (int i = 0; i < m_Nodes; i++) {
+	for (int i = 0; i < m_Nodes; i++)
+	{
 		vector<int> columnVector(m_Nodes, 0);
 		m_data.push_back(columnVector);
 	}
@@ -65,11 +70,16 @@ void Graph::createGraph() {
 	 *    given to the constructor
 	 */
 
-	for (int i = 0; i < m_Nodes; i++) {
-		for (int j = 0; j < m_Nodes; j++) {
-			if (prob() && (i != j)) {
+	for (int i = 0; i < m_Nodes; i++)
+	{
+		for (int j = 0; j < m_Nodes; j++)
+		{
+			if (prob() && (i != j))
+			{
 				m_data[i][j] = generateDistance();
-			} else {
+			}
+			else
+			{
 				m_data[i][j] = 0;
 			}
 			m_data[j][i] = m_data[i][j];
@@ -77,56 +87,67 @@ void Graph::createGraph() {
 	}
 }
 
-vector<int> Graph::getNeighbours(int vertex) {
+vector<int> Graph::getNeighbours(int vertex)
+{
 	// Make sure the given vertex doesn't exceed maximum nodes
 	vector<int> neighbours;
-	if (vertex >= m_Nodes) {
+	if (vertex >= m_Nodes)
+	{
 		cout << "The input argument vertex exceeds max number of nodes" << endl;
 		return neighbours; // return an empty vector;
 	}
 
 	vector<int> row = m_data.at(vertex);
-	for (unsigned int i = 0; i < row.size(); i++) {
-		if (row[i] != 0) {
+	for (unsigned int i = 0; i < row.size(); i++)
+	{
+		if (row[i] != 0)
+		{
 			neighbours.push_back(i);
 		}
 	}
 	return neighbours;
-
 }
 
-int Graph::getNumNodes() {
+int Graph::getNumNodes()
+{
 	return m_Nodes;
 }
 
-int Graph::getNumEdges() {
+int Graph::getNumEdges()
+{
 	int numEdges = 0;
-	vector<vector<int> >::iterator rit;
+	vector<vector<int>>::iterator rit;
 	vector<int>::iterator cit;
 
-	for (rit = m_data.begin(); rit != m_data.end(); rit++) {
+	for (rit = m_data.begin(); rit != m_data.end(); rit++)
+	{
 		vector<int> column = *rit;
-		for (cit = column.begin(); cit != column.end(); cit++) {
-			if (*cit != 0) {
+		for (cit = column.begin(); cit != column.end(); cit++)
+		{
+			if (*cit != 0)
+			{
 				numEdges++;
 			}
 		}
-
 	}
 
 	return numEdges;
 }
 
-bool Graph::isAdjacent(int node1, int node2) {
-	if (m_data[node1][node2] != 0) {
+bool Graph::isAdjacent(int node1, int node2)
+{
+	if (m_data[node1][node2] != 0)
+	{
 		return true;
 	}
 	// else
 	return false;
 }
 
-void Graph::addEdge(int node1, int node2) {
-	if (node1 == node2) {
+void Graph::addEdge(int node1, int node2)
+{
+	if (node1 == node2)
+	{
 		cout << "Loops not allowed" << endl;
 		return;
 	}
@@ -135,16 +156,20 @@ void Graph::addEdge(int node1, int node2) {
 	m_data[node1][node2] = m_data[node1][node2] = Graph::generateDistance();
 }
 
-void Graph::deleteEdge(int node1, int node2) {
+void Graph::deleteEdge(int node1, int node2)
+{
 	m_data[node1][node2] = m_data[node2][node1] = 0;
 }
 
-int Graph::getEdgeValue(int node1, int node2) {
+int Graph::getEdgeValue(int node1, int node2)
+{
 	return m_data[node1][node2];
 }
 
-void Graph::setEdgeValue(int node1, int node2, int value) {
-	if ((node1 == node2) && value == 0) {
+void Graph::setEdgeValue(int node1, int node2, int value)
+{
+	if ((node1 == node2) && value == 0)
+	{
 		cout << "Loops not allowed" << endl;
 		return;
 	}
@@ -154,25 +179,29 @@ void Graph::setEdgeValue(int node1, int node2, int value) {
 /*
  * Prints the graph 2-d vector. Useful in debugging.
  */
-void Graph::printGraph() {
-	vector<vector<int> >::iterator rit;
+void Graph::printGraph()
+{
+	vector<vector<int>>::iterator rit;
 	vector<int>::iterator cit;
 
-	for (rit = m_data.begin(); rit != m_data.end(); rit++) {
+	for (rit = m_data.begin(); rit != m_data.end(); rit++)
+	{
 		vector<int> column = *rit;
-		for (cit = column.begin(); cit != column.end(); cit++) {
+		for (cit = column.begin(); cit != column.end(); cit++)
+		{
 			cout << *cit << "\t";
 		}
 		cout << endl;
 	}
-
 }
 
 /*
  * Returns true if a random number generated is smaller than the density.
  */
-bool Graph::prob() {
-	if (rand() % 100 + 1 <= m_density) {
+bool Graph::prob()
+{
+	if (rand() % 100 + 1 <= m_density)
+	{
 		return true;
 	}
 	// else
@@ -182,7 +211,8 @@ bool Graph::prob() {
 /*
  * Generates a random distance for the given maximum distance.
  */
-int Graph::generateDistance() {
+int Graph::generateDistance()
+{
 	return (rand() % m_maxDistance + 1);
 }
 
@@ -190,11 +220,13 @@ int Graph::generateDistance() {
  * Calculates shortest path between two nodes using Dijkstra's algorithm
  */
 
-vector<int> Graph::findShortestPath(int sNode, int dNode) {
+vector<int> Graph::findShortestPath(int sNode, int dNode)
+{
 	// m_pq.clear(); // TO DO
 	m_visitedNodes.clear();
 	int totalNodes = getNumNodes();
-	for (int i = 0; i < totalNodes; i++) {
+	for (int i = 0; i < totalNodes; i++)
+	{
 		m_pq.push(NodeInfo(i));
 	}
 	m_sNode = sNode;
@@ -205,23 +237,28 @@ vector<int> Graph::findShortestPath(int sNode, int dNode) {
 	currentNode.setCost(0);
 	m_pq.deleteElement(currentNode);
 	m_visitedNodes.push_back(currentNode);
-	while (!pathFound) {
+	while (!pathFound)
+	{
 
-		vector < NodeInfo > unvN = getUnvisitedNbrs(currentNode.getNode());
+		vector<NodeInfo> unvN = getUnvisitedNbrs(currentNode.getNode());
 
 		// Get it's neighbors and their cost
 
-		for (auto &it:unvN) {
+		for (auto &it : unvN)
+		{
 			int cost = getEdgeValue(currentNode.getNode(),
-					it.getNode());
+									it.getNode());
 			it.setParent(currentNode.getNode());
 			it.setCost(currentNode.getCost() + cost);
-			updateQueue (it);
+			updateQueue(it);
 		}
 
-		if (isInVisitedNodes (m_dNode)) {
+		if (isInVisitedNodes(m_dNode))
+		{
 			pathFound = true;
-		} else {
+		}
+		else
+		{
 			currentNode = getNextNode();
 		}
 	}
@@ -231,13 +268,15 @@ vector<int> Graph::findShortestPath(int sNode, int dNode) {
 /*
  * Calculates Minimum spanning tree for the graph using Prim's algorithm
  */
-int Graph::findMST() {
+int Graph::findMST()
+{
 	// Visited nodes need to be reset
 	m_visitedNodes.clear();
 
 	int totalNodes = getNumNodes();
 
-	for (int i = 0; i < totalNodes; i++) {
+	for (int i = 0; i < totalNodes; i++)
+	{
 		m_pq.push(NodeInfo(i));
 	}
 
@@ -247,22 +286,27 @@ int Graph::findMST() {
 	currentNode.setCost(0);
 	m_pq.deleteElement(currentNode);
 	m_visitedNodes.push_back(currentNode);
-	while (!MSTFound) {
-		vector < NodeInfo > unvN = getUnvisitedNbrs(currentNode.getNode());
+	while (!MSTFound)
+	{
+		vector<NodeInfo> unvN = getUnvisitedNbrs(currentNode.getNode());
 
 		// Get it's neighbors and their cost
 
-		for (auto &it:unvN) {
+		for (auto &it : unvN)
+		{
 			int cost = getEdgeValue(currentNode.getNode(),
-					it.getNode());
+									it.getNode());
 			it.setParent(currentNode.getNode());
 			it.setCost(cost);
 			updateQueue(it);
 		}
 
-		if (m_pq.getTotalElements() == 0) {
+		if (m_pq.getTotalElements() == 0)
+		{
 			MSTFound = true;
-		} else {
+		}
+		else
+		{
 			currentNode = getNextNode();
 		}
 	}
@@ -270,14 +314,15 @@ int Graph::findMST() {
 	return getMSTCost();
 }
 
-
 /*
  * Updates priority queue if the cost of a node changes
  */
-void Graph::updateQueue(NodeInfo n) {
+void Graph::updateQueue(NodeInfo n)
+{
 	int idx = m_pq.getElementIndex(n);
 	NodeInfo qn = m_pq.getElement(idx);
-	if (qn.getCost() > n.getCost()) {
+	if (qn.getCost() > n.getCost())
+	{
 		m_pq.changeElement(qn, n);
 	}
 }
@@ -286,7 +331,8 @@ void Graph::updateQueue(NodeInfo n) {
  * Gets the next node from the queue and updates visited nodes
  */
 
-NodeInfo Graph::getNextNode() {
+NodeInfo Graph::getNextNode()
+{
 	NodeInfo n = m_pq.pop();
 	m_visitedNodes.push_back(n);
 	return n;
@@ -296,11 +342,14 @@ NodeInfo Graph::getNextNode() {
  * Gets unvisited neighbor of a node
  */
 
-vector<NodeInfo> Graph::getUnvisitedNbrs(int node) {
+vector<NodeInfo> Graph::getUnvisitedNbrs(int node)
+{
 	vector<int> n = getNeighbours(node);
-	vector < NodeInfo > un;
-	for (auto it:n) {
-		if (!isInVisitedNodes(it)) {
+	vector<NodeInfo> un;
+	for (auto it : n)
+	{
+		if (!isInVisitedNodes(it))
+		{
 			un.push_back(NodeInfo(it));
 		}
 	}
@@ -310,31 +359,39 @@ vector<NodeInfo> Graph::getUnvisitedNbrs(int node) {
 /*
  * Check if a node is in visited nodes
  */
-bool Graph::isInVisitedNodes(int node) {
-	for (auto it:m_visitedNodes) {
-		if (it.getNode() == node) {
+bool Graph::isInVisitedNodes(int node)
+{
+	for (auto it : m_visitedNodes)
+	{
+		if (it.getNode() == node)
+		{
 			return true;
 		}
 	}
 	return false;
 }
 
-
-vector<int> Graph::getShortestPath() {
+vector<int> Graph::getShortestPath()
+{
 
 	// Trace back the path.
 	int currentNode = m_dNode;
 	vector<int> path;
-	while (currentNode != m_sNode) {
-		for (auto it:m_visitedNodes) {
-			if (it.getNode() == currentNode) {
+	while (currentNode != m_sNode)
+	{
+		for (auto it : m_visitedNodes)
+		{
+			if (it.getNode() == currentNode)
+			{
 				path.push_back(it.getNode());
-				if (it.getNode()
-						== it.getParent()) {
+				if (it.getNode() == it.getParent())
+				{
 					cout << "There is no path between Node " << m_sNode
-							<< " to " << m_dNode << endl;
+						 << " to " << m_dNode << endl;
 					return vector<int>(0); // return an empty vector
-				} else {
+				}
+				else
+				{
 					currentNode = it.getParent();
 				}
 			}
@@ -346,26 +403,33 @@ vector<int> Graph::getShortestPath() {
 	return path;
 }
 
-void Graph::printPath(vector<int> path) {
+void Graph::printPath(vector<int> path)
+{
 	cout << "Shortest path cost from Node " << m_sNode << " to Node " << m_dNode
-			<< " is " << getShortestPathCost() << endl;
-	for (unsigned int i = 0; i < path.size(); i++) {
+		 << " is " << getShortestPathCost() << endl;
+	for (unsigned int i = 0; i < path.size(); i++)
+	{
 		cout << path[i];
-		if (i != path.size() - 1) {
+		if (i != path.size() - 1)
+		{
 			cout << "->";
 		}
 	}
 	cout << endl;
 }
 
-int Graph::getShortestPathCost() {
+int Graph::getShortestPathCost()
+{
 	// Get the total distance for this path.
-	if (m_visitedNodes.empty()){
+	if (m_visitedNodes.empty())
+	{
 		return -1;
 	}
 	int index;
-	for (unsigned int j = 0; j < m_visitedNodes.size(); j++) {
-		if (m_visitedNodes[j].getNode() == m_dNode) {
+	for (unsigned int j = 0; j < m_visitedNodes.size(); j++)
+	{
+		if (m_visitedNodes[j].getNode() == m_dNode)
+		{
 			index = j;
 			break;
 		}
@@ -375,29 +439,31 @@ int Graph::getShortestPathCost() {
 	return n.getCost();
 }
 
-void Graph::printMST() {
-	cout << "Edge \t \t" << "Cost" << endl;
-	for (unsigned int i = 1; i < m_visitedNodes.size(); i++) {
+void Graph::printMST()
+{
+	cout << "Edge \t \t"
+		 << "Cost" << endl;
+	for (unsigned int i = 1; i < m_visitedNodes.size(); i++)
+	{
 		cout << m_visitedNodes[i].getParent() << "->"
-				<< m_visitedNodes[i].getNode() << "\t \t";
+			 << m_visitedNodes[i].getNode() << "\t \t";
 		cout << m_visitedNodes[i].getCost() << '\n';
 	}
 }
 
-int Graph::getMSTCost() {
+int Graph::getMSTCost()
+{
 	int cost = 0;
-	for (unsigned int i = 1; i < m_visitedNodes.size(); i++) {
+	for (unsigned int i = 1; i < m_visitedNodes.size(); i++)
+	{
 		cost += m_visitedNodes[i].getCost();
 	}
 	cout << "Minimum spanning tree cost for the given data file graph is "
-			<< cost << endl;
+		 << cost << endl;
 	printMST();
 	return cost;
 }
 
-
-
-Graph::~Graph() {
-
+Graph::~Graph()
+{
 }
-
