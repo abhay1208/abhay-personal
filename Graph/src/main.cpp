@@ -6,10 +6,11 @@
 #include "Graph.h"
 using namespace std;
 
-int main() {
-	srand (time(NULL));
+int main()
+{
+	srand(time(NULL));
 
-	Graph g(3, 10, 1000);
-	g.findShortestPath(0,18);
+	Graph g(3, 11, 1000);
+	g.findShortestPath(0, 18);
 	return 0;
 }

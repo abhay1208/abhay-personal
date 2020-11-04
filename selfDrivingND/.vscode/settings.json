@@ -1,3 +1,11 @@
 {
-    "git.ignoreLimitWarning": true
+    "git.ignoreLimitWarning": true,
+    "files.associations": {
+        "iostream": "cpp",
+        "algorithm": "cpp",
+        "string_view": "cpp",
+        "string": "cpp",
+        "*.tcc": "cpp"
+    },
+    "python.pythonPath": "/Users/agupta/miniconda3/envs/carND/bin/python"
 }
